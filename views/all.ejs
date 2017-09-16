@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="180" >
+  <link rel="stylesheet" href="../bootstrap-3.3.7/dist/css/bootstrap.min.css"> 
+  <script src="../jquery.min.js"></script>
+  <script src="../bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+  <link rel= "stylesheet" href="/style.css">
+</head>
+<body>
+
+
+<div class="allContainer">
+  <h2>Fab4 Andon Board Monitoring</h2>   
+  <p><div id ="asOfNow"></div></p>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Process Name</th>
+        <th>Target</th>
+        <th>Actual Outs</th>
+        <th>Variance</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% for(var i=0; i < allData.length; i++) { %>
+    <tr>
+        <td><%= allData[i].process_name %></td>
+        <td><%= allData[i].process_target %></td>
+        <td><%= allData[i].process_outs %></td>
+        <td><div class="contentVar"><%= allData[i].variance %></div></td>
+    </tr>
+    <% } %>
+    </tbody>
+</table>
+</div>
+<script>
+        $(".contentVar:contains('+')").addClass("green");
+        $(".contentVar:contains('-')").addClass("red");
+</script>
+
+<script>
+        var today =  new Date();
+        var MS_PER_MINUTE = 60000;
+        var DELAYmin = 10;
+        var todayMinus10min = new Date(today - (DELAYmin * MS_PER_MINUTE));
+        document.getElementById("asOfNow").innerHTML = today.toDateString() + ' ' + todayMinus10min.toLocaleTimeString();
+</script>
+
+</body>
+</html>
