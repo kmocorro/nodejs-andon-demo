@@ -4,7 +4,7 @@
 # Version 1.0
 
 # this should run every 5 mins
-cd /c/sandbox/andon/script/hourlyTarget
+cd /c/demo/andon/script/hourlyTarget
 PATH=$PATH:/c/xampp/mysql/bin
 CURRENT_TIME=`date "+%H:%M:%S"`
 START_AM_SHIFT="06:30:00"
@@ -29,7 +29,7 @@ G_NOTYETMIDNIGHT=`echo $NOTYETMIDNIGHT | awk -F: '{ print ($1 * 3600) + ($2 * 60
 G_CURRENT_TIME=`echo $CURRENT_TIME | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }'`
 
 
-echo "now running... total process outs"
+echo "now running... total process TARGET"
 
 # Now we compare current time to check the shift then load specific time query
     if [ "$G_CURRENT_TIME" -ge "$G_START_AM_SHIFT" ] && [ "$G_CURRENT_TIME" -le "$G_END_AM_SHIFT" ]; then
@@ -42,7 +42,7 @@ echo "now running... total process outs"
 
         echo "loading... please wait"
         mysql -h$HOST -u$USER -p$PASS $DB < 630to1830.sql | sed 's/\t/,/g' > target_amTopm_temp.csv
-        cp target_amTopm_temp.csv '/c/sandbox/andon/public/target/process_target.csv'
+        cp target_amTopm_temp.csv '/c/demo/andon/public/target/process_target.csv'
         #sleep 1000
     else
 
@@ -56,7 +56,7 @@ echo "now running... total process outs"
             echo "PM shift between PM and Not yet midnight"
             echo "loading... please wait"
             mysql -h$HOST -u$USER -p$PASS $DB < 1830to0000.sql | sed 's/\t/,/g' > target_pmTomid_temp.csv
-            cp target_pmTomid_temp.csv '/c/sandbox/andon/public/target/process_target.csv'
+            cp target_pmTomid_temp.csv '/c/demo/andon/public/target/process_target.csv'
             #sleep 1000
 
         elif [ "$G_CURRENT_TIME" -ge "$G_MIDNIGHT" ] && [ "$G_CURRENT_TIME" -le "$G_END_PM_SHIFT" ]; 
@@ -69,7 +69,7 @@ echo "now running... total process outs"
             echo "PM shift between MIDNIGHT and PM END shift"
             echo "loading... please wait"
             mysql -h$HOST -u$USER -p$PASS $DB < 0000to0630.sql | sed 's/\t/,/g' > target_midToam_temp.csv
-            cp target_midToam_temp.csv '/c/sandbox/andon/public/target/process_target.csv'
+            cp target_midToam_temp.csv '/c/demo/andon/public/target/process_target.csv'
              
             #sleep 1000
 

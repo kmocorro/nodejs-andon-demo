@@ -4,7 +4,7 @@
 # Version 1.0
 
 # this should run every 5 mins
-cd /c/sandbox/andon/script/hourly
+cd /c/demo/andon/script/hourly
 PATH=$PATH:/c/xampp/mysql/bin
 CURRENT_TIME=`date "+%H:%M:%S"`
 START_AM_SHIFT="06:30:00"
@@ -42,7 +42,7 @@ echo "now running... total process outs"
 
         echo "loading... please wait"
         mysql -h$HOST -u$USER -p$PASS $DB < 630to1830.sql | sed 's/\t/,/g' > outs_amTopm_temp.csv
-        cp outs_amTopm_temp.csv '/c/sandbox/andon/public/outs/process_outs.csv'
+        cp outs_amTopm_temp.csv '/c/demo/andon/public/outs/process_outs.csv'
         #sleep 1000
     else
 
@@ -56,7 +56,7 @@ echo "now running... total process outs"
             echo "PM shift between PM and Not yet midnight"
             echo "loading... please wait"
             mysql -h$HOST -u$USER -p$PASS $DB < 1830to0000.sql | sed 's/\t/,/g' > outs_pmTomid_temp.csv
-            cp outs_pmTomid_temp.csv '/c/sandbox/andon/public/outs/process_outs.csv'
+            cp outs_pmTomid_temp.csv '/c/demo/andon/public/outs/process_outs.csv'
             #sleep 1000
 
         elif [ "$G_CURRENT_TIME" -ge "$G_MIDNIGHT" ] && [ "$G_CURRENT_TIME" -le "$G_END_PM_SHIFT" ]; 
@@ -69,7 +69,7 @@ echo "now running... total process outs"
             echo "PM shift between MIDNIGHT and PM END shift"
             echo "loading... please wait"
             mysql -h$HOST -u$USER -p$PASS $DB < 0000to0630.sql | sed 's/\t/,/g' > outs_midToam_temp.csv
-            cp outs_midToam_temp.csv '/c/sandbox/andon/public/outs/process_outs.csv'
+            cp outs_midToam_temp.csv '/c/demo/andon/public/outs/process_outs.csv'
              
             #sleep 1000
 

@@ -107,11 +107,16 @@
                     </table>
                     <div id="toolbar">
                         <div  class="list-group" >
-                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newToolTime()" data-toggle="tooltip" title="Click to Add / Update Tool Time" style="color: orange;" >New / Edit</a>
-                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyToolTime()"style="color: orange;" >Delete</a>
+
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newToolTime()" data-toggle="tooltip" title="Click to Add / Update Tool Time" style="color: orange;" >New</a>
+
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editToolTime()"style="color: orange;">Edit</a>
+
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyToolTime()"style="color: orange;" >Delete</a>
+
                         </div>
                         
-                        <!--<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editToolTime()">Edit</a> -->
+                        
                         
                     </div>
                     
@@ -299,36 +304,29 @@
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">Cancel</a>
                     </div>
 
-
-
                     <!---->
                     <div id="editToolTime" class="easyui-dialog" style="width:400px"
                             closed="true" buttons="#editToolTime-buttons">
                         <form id="fmuph" method="post" novalidate style="margin:0;padding:20px 50px">
 
-                            <div style="margin-bottom:10px">
-                                <input class="easyui-textbox" disabled="disable" name="id" label="Target ID" required ="true" labelPosition="top" style="width:100%;height:52px;">
-                            </div>
+                            
                              <div style="margin-bottom:10px">
                                     <select class="easyui-combobox" disabled="disable" name="process_id" label="Process ID:" required="true" labelPosition="top" style="width:100%;height:52px;">
                                     </select>
                              </div>
-                            <div style="margin-bottom:10px">
-                                <input class="easyui-textbox" disabled="disable" name="num_tool" label="Tools: " required ="true" labelPosition="top" style="width:100%;height:52px;">
+
+                             <div style="margin-bottom:10px">
+                                    <input class="easyui-datebox" disabled="disable" name="today_date" label="Date(Today):" required ="true" labelPosition="top" style="width:100%;height:52px;">
                             </div>
+                           
                             <div style="margin-bottom:10px">
-                                <input class="easyui-textbox" disabled="disable" name="uph" label="Tool UPH:" required ="true" labelPosition="top" style="width:100%;height:52px;">
+                                <input class="easyui-combobox" disabled="disable" name="stime" label="Start Time:" required ="true" labelPosition="top" style="width:100%;height:52px;">
                             </div>
+
                             <div style="margin-bottom:10px">
-                                <input class="easyui-textbox" disabled="disable" name="oee" label="OEE:" required ="true" labelPosition="top" style="width:100%;height:52px;">
+                                <input class="easyui-combobox" disabled="disable" name="ntime" label="End Time:" required ="true" labelPosition="top" style="width:100%;height:52px;">
                             </div>
-                        
-                            <div style="margin-bottom:10px">
-                                <input class="easyui-datetimebox" name="start_time" label="Select Start Time:" required ="true" id="startTime_sub" labelPosition="top"  showSeconds="false"  value= "07/18/2017 7:00:00" style="width:100%;height:52px;">
-                            </div>
-                            <div style="margin-bottom:10px">
-                                <input class="easyui-datetimebox" name="end_time" label="Select End Time:" required ="true" id="endTime_sub"  labelPosition="top"  showSeconds="false"  value= "07/18/2017 7:00:00" style="width:100%;height:52px;">
-                            </div>
+
                             <div style="margin-bottom:10px">
                                 <select class="easyui-combobox" name="toolpm" label="Tool Time:" required="true" labelPosition="top" style="width:100%;height:52px;">
                                         <option value="1">1</option>
@@ -419,16 +417,35 @@
                             });
                         }
                         function destroyToolTime(){
-                            
+                            var row = $('#dg').datagrid('getSelected');
+                            if(row){
                                 $.messager.confirm('Confirm','Are you sure you want to delete this tool time?',function(r){
-                                    if (r){
-                                        $.post('/api/delete',function(){
-                                               $('#dg').datagrid('reload');    // reload the user data
-                                        });
+                                    if (r){ /*
+                                        $.post('/api/delete',{today_date: row.today_date, process_id: row.process_id, stime: row.stime, ntime: row.ntime}, function(result){
+                                            if(result.success){
+                                                $('#dg').datagrid('reload');    // reload the user data
+                                            } else {
+                                                $.messager.show({    // show error message
+                                                    title: 'Error',
+                                                    msg: result.errorMsg
+                                                });
+                                            }
+                                               
+                                        },'json'); */
+
+                                        $.ajax({
+                                        type: "POST",
+                                        url: '/api/delete',
+                                        data: ({today_date: row.today_date, process_id: row.process_id, stime: row.stime, ntime: row.ntime}),
+                                        dataType: "json",
+                                        error: function() {
+                                            if(!alert('Successfully Deleted!')){window.location.reload();}
+                                        }
+                                    });
                                         
                                     }
                                 });
-                            
+                            }
                             
                         }
                     </script>

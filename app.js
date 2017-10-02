@@ -53,9 +53,5 @@ app.get('/settings', checkAuth, function(req, res){
 });
 
 
-
-
-
-
 //  listen to port localhost:3000
 app.listen(port);

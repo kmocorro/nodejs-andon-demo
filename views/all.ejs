@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Fab4 Andon Board</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="refresh" content="180" >
@@ -14,12 +14,12 @@
 
 
 <div class="allContainer">
-  <h2>Fab4 Andon Board Monitoring</h2>   
-  <p><div id ="asOfNow"></div></p>
+  <h2><strong>Fab4 Andon Board Monitoring</strong></h2>
+  <strong><p><i><div id ="asOfNow"></div></i></p></strong>
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Process Name</th>
+        <th><strong>Process Name</strong></th>
         <th>Target</th>
         <th>Actual Outs</th>
         <th>Variance</th>
@@ -28,7 +28,7 @@
     <tbody>
     <% for(var i=0; i < allData.length; i++) { %>
     <tr>
-        <td><%= allData[i].process_name %></td>
+        <td><a href="hourly/<%= allData[i].process_name %>" target="_blank"><strong><%= allData[i].process_name %></strong></a></td>
         <td><%= allData[i].process_target %></td>
         <td><%= allData[i].process_outs %></td>
         <td><div class="contentVar"><%= allData[i].variance %></div></td>

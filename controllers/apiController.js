@@ -120,6 +120,7 @@ module.exports = function(app){
                                 if(obj[0].sup_password==req.body.password){
                                     
                                     req.session.employee_id = req.body.employee_id;
+                                    req.session.sup_firstname = obj[0].sup_firstname;
                                     
                                     let logs = {employee_id: obj[0].employee_id, log_details: 'login', log_date_time: dateAndtime};
                                     
@@ -156,13 +157,13 @@ module.exports = function(app){
 
                 connection.query('INSERT INTO tbl_sups_logs SET ?', logs,  function(err, results, fields){  
                     console.log(logs);
-                    delete req.session.employee_id;
-                    res.redirect('/');
-                    
                 });
                 
+                delete req.session.employee_id;
+                res.redirect('/');
+                
             });
-        
+
       }); 
 
     // ALL tools with target outs and variance
@@ -234,13 +235,13 @@ module.exports = function(app){
 
                         if(data[0]['target'][i]['process_target'] >= data[1]['outs'][i]['process_outs']){
                             if(data[0]['target'][i]['process_target'] !== null && data[1]['outs'][i]['process_outs'] !== null){
-                                var eachVariance = '+ ' + (data[0]['target'][i]['process_target'] - data[1]['outs'][i]['process_outs']).toLocaleString(undefined, {maximumFractionDigits: 0});
+                                var eachVariance = '- ' + (data[0]['target'][i]['process_target'] - data[1]['outs'][i]['process_outs']).toLocaleString(undefined, {maximumFractionDigits: 0});
                             }else{
                                 var eachVariance = 0;
                             }
                         }else{
                             if(data[0]['target'][i]['process_target'] !== null && data[1]['outs'][i]['process_outs'] !== null){
-                                var eachVariance = (data[0]['target'][i]['process_target'] - data[1]['outs'][i]['process_outs']).toLocaleString(undefined, {maximumFractionDigits: 0});
+                                var eachVariance = '+ ' + (data[1]['outs'][i]['process_outs'] - data[0]['target'][i]['process_target']).toLocaleString(undefined, {maximumFractionDigits: 0});
                             }else{
                                 var eachVariance = 0;
                             }
@@ -537,27 +538,31 @@ module.exports = function(app){
         poolLocal.getConnection(function(err, connection){
             if (err) throw err;
 
-            if(req.body.id) {
+            if(req.body.process_id) {
 
                 //  need to dis to align the jeasyui datetime with my format
-                startTime = new Date(req.body.start_time);
-                endTime = new Date(req.body.end_time);
+                //startTime = new Date(req.body.stime);
+                //endTime = new Date(req.body.ntime);
+                today_date = new Date(req.body.today_date);
 
                 //  for target data, compute details
                 let computedTarget = Math.round((req.body.uph * (req.body.num_tool - req.body.toolpm)) * (req.body.oee/100)) || 0;
 
 
                 connection.query({
-                    sql: 'UPDATE tbl_target_toolpm SET start_time =?, end_time =?, toolpm =?, remarks= ? WHERE id =? ',
-                    values: [startTime, endTime, req.body.toolpm, req.body.remarks, req.body.id]
+                    sql: 'UPDATE tbl_target_input SET toolpm =?, remarks= ? WHERE process_id =? AND today_date=? AND stime=? AND ntime=?',
+                    values: [req.body.toolpm, req.body.remarks, req.body.process_id, today_date, req.body.stime, req.body.ntime]
                 },  function(err, results, fields){
                     if(err) throw err;
-
-                console.log('Target id: ' + req.body.id + ' has been updated!');
+                
+                console.log(req.body.toolpm, req.body.remarks, req.body.process_id, today_date, req.body.stime, req.body.ntime);
+                
+                console.log('Target id: ' + req.body.process_id + ' has been updated!');
                 res.redirect('back');
             });
 
             } else {
+                
                 console.log('something is wrong');
             }
 
@@ -572,11 +577,14 @@ module.exports = function(app){
     app.post('/api/delete', function(req, res){
         poolLocal.getConnection(function(err, connection){
             if (err) throw err;
+            
+            //today_date = new Date(req.body.today_date);
 
                 connection.query({
-                    sql: 'UPDATE tbl_target_input SET toolpm = 0',
-                    //  values: [req.body.process_id]
+                    sql: 'UPDATE tbl_target_input SET toolpm =0, remarks= "--" WHERE process_id =? AND today_date=? AND stime=? AND ntime=?',
+                    values: [req.body.process_id, req.body.today_date, req.body.stime, req.body.ntime]
                 },  function(err, results, field){
+                        console.log(req.body.process_id, req.body.today_date, req.body.stime, req.body.ntime);
                         res.redirect('back');
                 });
             

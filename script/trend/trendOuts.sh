@@ -4,7 +4,7 @@
 # Version 1.0
 
 # this should run every 5 mins
-cd /c/sandbox/andon/script/trend
+cd /c/demo/andon/script/trend
 PATH=$PATH:/c/xampp/mysql/bin
 
 CURRENT_TIME=`date "+%H:%M:%S"`
@@ -48,9 +48,9 @@ echo "now running... trend outs"
         for i in "${arr[@]}" 
         do
 
-            mysql -h$HOST -u$USER -p$PASS $DB < '/c/sandbox/andon/script/trend/am/'$i'_0630to1830.sql' | sed 's/\t/,/g' > '/c/sandbox/andon/script/trend/temp/'$i'_temp.csv'
+            mysql -h$HOST -u$USER -p$PASS $DB < '/c/demo/andon/script/trend/am/'$i'_0630to1830.sql' | sed 's/\t/,/g' > '/c/demo/andon/script/trend/temp/'$i'_temp.csv'
             
-            cp '/c/sandbox/andon/script/trend/temp/'$i'_temp.csv' '/c/sandbox/andon/public/outs/'$i'_process_outs.csv'
+            cp '/c/demo/andon/script/trend/temp/'$i'_temp.csv' '/c/demo/andon/public/outs/'$i'_process_outs.csv'
             
             echo $i 'trend has been saved'
 
@@ -72,9 +72,9 @@ echo "now running... trend outs"
             for i in "${arr[@]}"
             do
 
-                mysql -h$HOST -u$USER -p$PASS $DB < '/c/sandbox/andon/script/trend/mid/'$i'_1830to0000.sql' | sed 's/\t/,/g' > '/c/sandbox/andon/script/trend/temp/'$i'_temp.csv'
+                mysql -h$HOST -u$USER -p$PASS $DB < '/c/demo/andon/script/trend/mid/'$i'_1830to0000.sql' | sed 's/\t/,/g' > '/c/demo/andon/script/trend/temp/'$i'_temp.csv'
 
-                cp '/c/sandbox/andon/script/trend/temp/'$i'_temp.csv' '/c/sandbox/andon/public/outs/'$i'_process_outs.csv'
+                cp '/c/demo/andon/script/trend/temp/'$i'_temp.csv' '/c/demo/andon/public/outs/'$i'_process_outs.csv'
             
             done
             sleep 10
@@ -89,9 +89,9 @@ echo "now running... trend outs"
             for i in "${arr[@]}"
             do
 
-                mysql -h$HOST -u$USER -p$PASS $DB < '/c/sandbox/andon/script/trend/pm/'$i'_0000to0630.sql' | sed 's/\t/,/g' > '/c/sandbox/andon/script/trend/temp/'$i'_temp.csv'
+                mysql -h$HOST -u$USER -p$PASS $DB < '/c/demo/andon/script/trend/pm/'$i'_0000to0630.sql' | sed 's/\t/,/g' > '/c/demo/andon/script/trend/temp/'$i'_temp.csv'
 
-                cp '/c/sandbox/andon/script/trend/temp/'$i'_temp.csv' '/c/sandbox/andon/public/outs/'$i'_process_outs.csv'
+                cp '/c/demo/andon/script/trend/temp/'$i'_temp.csv' '/c/demo/andon/public/outs/'$i'_process_outs.csv'
             
             done
             sleep 10

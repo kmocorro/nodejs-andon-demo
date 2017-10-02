@@ -3,7 +3,7 @@
 # KEVIN B MOCORRO
 # Version 1.0
 
-cd /c/sandbox/andon/script/target
+cd /c/demo/andon/script/target
 PATH=$PATH:/c/xampp/mysql/bin
 
  # Will insert target every morning
